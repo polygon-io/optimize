@@ -7,6 +7,8 @@ import (
 	"math"
 )
 
+var BrentBoundsError = errors.New("brent: f(a) * f(b) >= 0")
+
 // Brent find zero of f using Brent's method
 // see https://en.wikipedia.org/wiki/Brent%27s_method
 // logger may be nil
@@ -25,7 +27,7 @@ func Brent(a, b, tol float64, f func(float64) float64, logger *log.Logger) (floa
 	fa, fb := f(a), f(b)
 	// si f(a) f(b) >= 0 alors sortie (erreur) fin si
 	if fa*fb >= 0 {
-		return math.NaN(), errors.New("brent: f(a) f(b) >= 0")
+		return math.NaN(), BrentBoundsError
 	}
 	// si |f(a)| < |f(b)| alors échanger (a,b) fin si
 	if abs(fa) < abs(fb) {
